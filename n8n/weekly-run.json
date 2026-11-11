@@ -1,0 +1,57 @@
+{
+  "name": "signal-to-outbound: weekly score + Slack summary",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "weeks", "triggerAtDay": [1], "triggerAtHour": 8 }]
+        }
+      },
+      "id": "a1f0c1d2-0001-4000-8000-000000000001",
+      "name": "Every Monday 08:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "command": "cd /opt/signal-to-outbound && npm run score --silent && cat output/summary.json"
+      },
+      "id": "a1f0c1d2-0002-4000-8000-000000000002",
+      "name": "Run scoring step",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "// stdout is the run log followed by summary.json; take the JSON object at the end.\nconst out = $input.first().json.stdout;\nconst summary = JSON.parse(out.slice(out.lastIndexOf('\\n{') + 1));\nreturn [{ json: summary }];"
+      },
+      "id": "a1f0c1d2-0003-4000-8000-000000000003",
+      "name": "Parse summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, 0]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": { "__rl": true, "mode": "name", "value": "#outbound-review" },
+        "text": "=*Signal sweep ready for review*\\n{{ $json.found }} companies found, {{ $json.scored }} scored ({{ $json.by_priority.high }} high, {{ $json.by_priority.medium }} medium, {{ $json.by_priority.low }} low), {{ $json.needs_review }} need manual review.\\nCost: ${{ $json.estimated_cost_usd }} ({{ $json.api_calls }} API calls).\\nNothing has been sent. Open `output/review.csv` and set a decision on each row.",
+        "otherOptions": {}
+      },
+      "id": "a1f0c1d2-0004-4000-8000-000000000004",
+      "name": "Post summary to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [660, 0]
+    }
+  ],
+  "connections": {
+    "Every Monday 08:00": { "main": [[{ "node": "Run scoring step", "type": "main", "index": 0 }]] },
+    "Run scoring step": { "main": [[{ "node": "Parse summary", "type": "main", "index": 0 }]] },
+    "Parse summary": { "main": [[{ "node": "Post summary to Slack", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "active": false
+}

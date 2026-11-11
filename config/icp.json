@@ -1,0 +1,24 @@
+{
+  "seller": {
+    "name": "Mazorda",
+    "offer": "A GTM consultancy that builds AI-enabled revenue systems (Clay, n8n, HubSpot/Salesforce, Claude Code) for B2B SaaS teams, so new GTM hires start with working pipeline infrastructure."
+  },
+  "icp": {
+    "summary": "B2B SaaS company headquartered in the UK or EU, Series A to C, funded in roughly the last 6 months, about 20-300 employees.",
+    "criteria": [
+      "B2B SaaS product",
+      "HQ in the UK or EU",
+      "Last round is Series A, B or C, raised in roughly the last 6 months",
+      "About 20-300 employees"
+    ]
+  },
+  "signal": {
+    "primary": "Currently hiring for GTM, RevOps, SDR/BDR, sales, growth or demand-gen roles. They need pipeline and probably lack GTM systems.",
+    "bonus": [
+      "Uses HubSpot or Salesforce",
+      "Recent leadership hire in sales or marketing",
+      "Expanding into a new market"
+    ]
+  },
+  "buyer_titles": ["CRO", "VP Sales", "VP Marketing", "Head of Revenue Operations", "Head of Growth", "CEO / Founder (under ~50 employees)"]
+}

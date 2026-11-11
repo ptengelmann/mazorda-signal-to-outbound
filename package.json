@@ -1,0 +1,23 @@
+{
+  "name": "mazorda-signal-to-outbound",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Find companies showing a buying signal, score them with Claude, and write a human review sheet. Never sends anything.",
+  "scripts": {
+    "demo": "tsx src/run.ts",
+    "score": "tsx src/run.ts",
+    "test": "tsx --test src/validate.test.ts src/score.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0",
+    "csv-stringify": "^6.9.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.0"
+  }
+}

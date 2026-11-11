@@ -1,0 +1,79 @@
+{
+  "routineRunId": "run_0toc057Yo3EbopX9xrx",
+  "mode": "inline",
+  "total": 10,
+  "finished": 10,
+  "status": "complete",
+  "data": [
+    {
+      "id": "capsa.ai",
+      "status": "complete",
+      "result": {
+        "Employee Count": "32"
+      }
+    },
+    {
+      "id": "restate.dev",
+      "status": "complete",
+      "result": {
+        "Employee Count": "29"
+      }
+    },
+    {
+      "id": "rayon.design",
+      "status": "complete",
+      "result": {
+        "Employee Count": "43"
+      }
+    },
+    {
+      "id": "tsuga.com",
+      "status": "complete",
+      "result": {
+        "Employee Count": "59"
+      }
+    },
+    {
+      "id": "namespace.so",
+      "status": "complete",
+      "result": {
+        "Employee Count": "23"
+      }
+    },
+    {
+      "id": "riskledger.com",
+      "status": "complete",
+      "result": {
+        "Employee Count": "99"
+      }
+    },
+    {
+      "id": "hyperlayer.com",
+      "status": "complete",
+      "result": {
+        "Employee Count": "81"
+      }
+    },
+    {
+      "id": "gradient-labs.ai",
+      "status": "complete",
+      "result": {
+        "Employee Count": "57"
+      }
+    },
+    {
+      "id": "conveo.ai",
+      "status": "complete",
+      "result": {
+        "Employee Count": "103"
+      }
+    },
+    {
+      "id": "cytix.io",
+      "status": "complete",
+      "result": {
+        "Employee Count": "30"
+      }
+    }
+  ]
+}

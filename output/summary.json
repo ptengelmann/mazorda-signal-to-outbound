@@ -1,0 +1,18 @@
+{
+  "run_at": "2026-11-11T09:48:37.637Z",
+  "model": "claude-sonnet-5-5",
+  "found": 15,
+  "enriched": 15,
+  "scored": 15,
+  "needs_review": 0,
+  "retried": 0,
+  "by_priority": {
+    "high": 7,
+    "medium": 7,
+    "low": 1
+  },
+  "api_calls": 15,
+  "input_tokens": 35888,
+  "output_tokens": 3915,
+  "estimated_cost_usd": 0.1109
+}
