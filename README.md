@@ -56,7 +56,7 @@ Optional, for Clay enrichment: in Claude Code run `/plugin marketplace add clay-
 | `npm run demo` | Scores the companies in `data/companies.json` and writes `output/review.csv`, `output/clay-import.csv` and `output/summary.json`. About 15 API calls. |
 | `npm run score -- --limit 3` | Same, first 3 companies only. |
 | `npm run score -- --input other.json` | Score a different company file. |
-| `npm test` | Runs 7 offline tests of validation, retry and `needs_review` (no API calls). |
+| `npm test` | Runs 8 offline tests of validation, retry and `needs_review` (no API calls). |
 | `/signal-to-outbound` in Claude Code | Runs the full skill: find, enrich, score, report. |
 
 A run that could exceed 50 API calls stops and asks for `--yes`.
@@ -71,7 +71,7 @@ Edit `config/icp.json`: the seller, the ICP criteria, the primary and bonus sign
 
 **Retry once, then stop.** A failed response is sent back with the exact validation errors. If the second attempt also fails, the row is written as `needs_review` with the scores blank and the reason in `validation_notes`. A blank row costs a reviewer a minute. A guessed row can cost a prospect's trust.
 
-**Grounding check.** The model is only allowed to use facts from the company record. `src/validate.ts` enforces a simple version of that: every number and every proper noun (a capitalised word that is not the first word of a sentence) in `why_now` and `first_line` must appear in the record. An invented amount, investor or city fails the row. A short banned-word list also rejects flattery in the opening line.
+**Grounding check.** The model is only allowed to use facts from the company record. `src/validate.ts` enforces a simple version of that: every number and every proper noun (a capitalised word that is not the first word of a sentence) in `why_now` and `first_line` must appear in the record. An invented amount, investor or city fails the row. A short banned-word list also rejects flattery in the opening line, and a second list rejects stock closers such as "so pipeline systems will matter from day one", which made early runs read alike.
 
 **Nothing auto-sends.** The pipeline ends at a file. The code contains no email, sequencer or CRM client, so the approval step cannot be skipped by mistake or by a prompt. A wrong line sent to a Series B CRO is not recoverable, and a person reading 15 rows takes ten minutes.
 
@@ -99,20 +99,21 @@ Before publishing, every row was re-checked against its sources on 11 November 2
 | | |
 |---|---|
 | Found / enriched / scored | 15 / 15 / 15 |
-| Priority | 7 high, 7 medium, 1 low |
+| Priority | 8 high, 7 medium, 0 low |
 | needs_review | 0 |
-| Retries | 0 |
-| API calls | 15 |
-| Cost | about $0.11 |
+| Retries | 2 |
+| API calls | 17 |
+| Cost | about $0.12 |
 
-There is only one "low" row because the input list is pre-filtered to Mazorda's ICP. Lows appear when the same scoring runs on a broader list.
+There are no "low" rows because the input list is pre-filtered to Mazorda's ICP. Lows appear when the same scoring runs on a broader list.
 
-No row failed validation in this run, so nothing landed in `needs_review`. That path is covered by an offline test instead: `src/score.test.ts` feeds the scorer a fixture that cites an investor and a city missing from the company record, and asserts the row is retried once and then written as `needs_review` with blank scores. `npm test` runs it without an API key.
+Two responses failed validation on the first attempt and passed on the retry: one opening line used a banned stock phrase ("pipeline setup"), and one mentioned "APAC", a term that is not in the company record (the record says "Asia-Pacific"). Both are noted in the sheet's `validation_notes` column. No row failed twice, so nothing landed in `needs_review`. That path is covered by an offline test instead: `src/score.test.ts` feeds the scorer a fixture that cites an investor and a city missing from the company record, and asserts the row is retried once and then written as `needs_review` with blank scores. `npm test` runs it without an API key.
 
 ## Limitations
 
 - **The grounding check is lexical.** It catches invented names and numbers. It does not catch a wrong relationship between true facts, or a false claim written entirely in lowercase words. It can also reject a fair paraphrase, which shows up as a retry.
 - **Signals go stale.** Job ads close. The sheet records what was true on the day of the run, and the reviewer should click through before approving.
+- **Opening lines still share a shape.** Banning the stock closers removed one formula, and most lines now end on a "who owns..." question instead. They are drafts for a person to edit, not finished copy.
 - **Scores vary between runs.** On identical data, a borderline company can move one priority band from one run to the next. The rubric narrows this but does not remove it, which is one more reason a person decides.
 - **Length needs a target below the limit.** When the prompt only stated the 160-character limit, about half of first attempts overran it and had to be retried. Asking for about 130 characters brought retries to zero or one per run.
 - **CRM is a best guess.** A HubSpot tag on a website shows the tool is in use, not that it is the system of record. Six companies still have no CRM.

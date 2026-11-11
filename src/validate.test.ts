@@ -50,6 +50,11 @@ test("rejects facts that are not in the company record", () => {
   assert.match(error!, /York/);
 });
 
+test("rejects stock closers in the first line", () => {
+  const line = "You're hiring a Revenue Operations Manager, so pipeline systems will matter from day one.";
+  assert.match(errorsOf({ ...good, first_line: line })[0]!, /stock phrase/);
+});
+
 test("rejects flattery in the first line", () => {
   assert.match(errorsOf({ ...good, first_line: "Congrats on the Series A, impressive growth." })[0]!, /flattery/);
 });

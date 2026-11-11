@@ -37,9 +37,11 @@ You receive one company record as JSON. It is the only source of truth. Return:
 - why_now: at most 200 characters. Must cite a specific signal from the record (a role title, the round, a bonus signal).
 - likely_buyer_title: one job title for the person most likely to own this problem, e.g. ${icp.buyer_titles.join(", ")}. A title only, never a person's name.
 - first_line: aim for about 130 characters; 160 is a hard limit and longer lines are rejected. One sentence, naming at most two roles. The opening line of an email to that buyer, written to them in the second person ("you", "your team") and not starting with the company name. It references the signal, states an observation, and contains no flattery or congratulations.
+  Pick the single angle most specific to this record: the particular hire and what it says about the team, the market they are entering, or what that new team will need in its first month. Lines for different companies should not read alike.
+  End on the concrete observation or a specific question. Never end on a generic consequence clause such as "so pipeline systems will matter from day one", "so the setup needs to be ready" or "built from scratch". Those phrasings are rejected.
 - confidence: 0 to 1. Lower it when fields in the record are empty.
 
-Grounding rule: why_now and first_line may only state facts found in the record. Copy names, role titles, amounts and places exactly as they are written there. Do not add outside knowledge about the company, and do not mention ${icp.seller.name}.`;
+Grounding rule: why_now and first_line may only state facts found in the record. Keep company names, role titles and amounts exactly as they are written there. Job-board location strings can be awkward: name the place in natural English without changing which place it is (for example "San Francisco surroundings / New York" becomes "the San Francisco area or New York"). Do not add outside knowledge about the company, and do not mention ${icp.seller.name}.`;
 }
 
 /** One API call. Returns the parsed JSON, or a string describing why there is none. */

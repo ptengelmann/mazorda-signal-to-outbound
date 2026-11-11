@@ -4,7 +4,10 @@ import { Score, type Company } from "./schema.js";
 // GTM vocabulary that is fine to use without appearing in the company record.
 const GENERIC = new Set(["gtm", "revops", "sdr", "sdrs", "bdr", "bdrs", "crm", "b2b", "saas", "ae", "aes", "ops", "icp"]);
 const FLATTERY = /\b(congrat\w*|impressive|amazing|awesome|incredible|love|loved|excited|exciting|kudos|great|fantastic)\b/i;
-const MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+// Stock closers that make every opening line read the same. The line should end on the specific observation.
+const STOCK_CLOSER =
+  /\b(from day one|from scratch|will matter|matters? (early|now)|keeping pace|(need|needs|needed|have|has) to be (ready|working|in place|set up)|(pipeline|gtm) (systems?|setup|set-up|tooling|processes|infrastructure))\b/i;
+const MONTHS =["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
 
 const fold = (s: string) => s.toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "");
 const wordsOf = (s: string) => fold(s).match(/[a-z]+/g) ?? [];
@@ -70,6 +73,8 @@ export function validateScore(raw: unknown, company: Company): Validation {
   }
   const flattery = score.first_line.match(FLATTERY);
   if (flattery) errors.push(`first_line contains flattery ("${flattery[0]}")`);
+  const closer = score.first_line.match(STOCK_CLOSER);
+  if (closer) errors.push(`first_line uses a stock phrase ("${closer[0]}"); end on the specific observation, not a generic consequence`);
 
   return errors.length ? { ok: false, errors } : { ok: true, score };
 }
